@@ -19,6 +19,7 @@ namespace Manim
         {
             undoHistory.Push(manipulation);
             redoHistory.Clear();
+            actionMan.Apply(manipulation);
         }
 
         public void Undo()
@@ -26,7 +27,7 @@ namespace Manim
             if (undoHistory.Count == 0) return;
             var manipulation = undoHistory.Pop();
             redoHistory.Push(manipulation);
-            actionMan.Reverse(manipulation);
+            actionMan.ReverseLast();
         }
 
         public void Redo()
@@ -41,6 +42,7 @@ namespace Manim
         {
             undoHistory.Clear();
             redoHistory.Clear();
+            actionMan.ReverseAll();
         }
     }
 }

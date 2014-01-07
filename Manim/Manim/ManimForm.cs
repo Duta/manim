@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Manim
@@ -11,13 +8,13 @@ namespace Manim
     public partial class ManimForm : Form
     {
         private ActionMan actionMan;
-        private ManipulationHistory actionHistory;
+        private ManipulationHistory manipulations;
 
         public ManimForm()
         {
             InitializeComponent();
             actionMan = new ActionMan(pictureBox);
-            actionHistory = new ManipulationHistory(actionMan);
+            manipulations = new ManipulationHistory(actionMan);
         }
 
         private void openMenuItem_Click(object sender, EventArgs e)
@@ -26,57 +23,49 @@ namespace Manim
             string filePath = openFileDialog.FileName;
             // TODO: Load the file
 
-            actionHistory.Clear();
+            manipulations.Clear();
         }
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
-            if (!EnsureHasOpenedFile()) return;
-            // TODO
+            // TODO: Save the file.
+
+            manipulations.Clear();
         }
 
         private void saveAsMenuItem_Click(object sender, EventArgs e)
         {
-            if (!EnsureHasOpenedFile()) return;
             saveFileDialog.ShowDialog();
             string filePath = saveFileDialog.FileName;
-            // TODO
+            // TODO: Save the file.
+
+            manipulations.Clear();
         }
 
         private void quitMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
+            // TODO: Check if the file needs saving.
             Close();
         }
 
         private void undoMenuItem_Click(object sender, EventArgs e)
         {
-            if (!EnsureHasOpenedFile()) return;
-            actionHistory.Undo();
-            // TODO
+            manipulations.Undo();
+        }
+
+        private void redoMenuItem_Click(object sender, EventArgs e)
+        {
+            manipulations.Redo();
         }
 
         private void copyMenuItem_Click(object sender, EventArgs e)
         {
-            if (!EnsureHasOpenedFile()) return;
-            // TODO
+            // TODO: Copy the image to the clipboard.
         }
 
         private void grayscaleMenuItem_Click(object sender, EventArgs e)
         {
-            if (!EnsureHasOpenedFile()) return;
-            saveMenuItem.Enabled = true;
-            // TODO
-        }
-
-        private bool EnsureHasOpenedFile()
-        {
-            var hasOpenedAFile = pictureBox.Image != null;
-            if (!hasOpenedAFile)
-            {
-                // TODO: ERROR: must first open a file
-            }
-            return hasOpenedAFile;
+            manipulations.Add(Manipulation.Grayscale);
         }
     }
 }

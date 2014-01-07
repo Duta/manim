@@ -52,7 +52,7 @@
       <DependentUpon>ManimForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ManimAction.cs" />
-    <Compile Include="ActionHistory.cs" />
+    <Compile Include="ManipulationHistory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ManimForm.resx">
