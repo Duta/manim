@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionMan.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ManimForm.cs">
       <SubType>Form</SubType>
     </Compile>

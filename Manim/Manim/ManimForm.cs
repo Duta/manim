@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Manim
@@ -9,6 +10,7 @@ namespace Manim
     {
         private ActionMan actionMan;
         private ManipulationHistory manipulations;
+        private string filePath;
 
         public ManimForm()
         {
@@ -20,26 +22,21 @@ namespace Manim
         private void openMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.ShowDialog();
-            string filePath = openFileDialog.FileName;
-            // TODO: Load the file
-
+            filePath = openFileDialog.FileName;
+            pictureBox.Image = Image.FromFile(filePath);
             manipulations.Clear();
         }
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Save the file.
-
-            manipulations.Clear();
+            save();
         }
 
         private void saveAsMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog.ShowDialog();
-            string filePath = saveFileDialog.FileName;
-            // TODO: Save the file.
-
-            manipulations.Clear();
+            filePath = saveFileDialog.FileName;
+            save();
         }
 
         private void quitMenuItem_Click(object sender, EventArgs e)
@@ -66,6 +63,13 @@ namespace Manim
         private void grayscaleMenuItem_Click(object sender, EventArgs e)
         {
             manipulations.Add(Manipulation.Grayscale);
+        }
+
+        private void save()
+        {
+            if (filePath == null) return;
+            pictureBox.Image.Save(filePath);
+            manipulations.Clear();
         }
     }
 }

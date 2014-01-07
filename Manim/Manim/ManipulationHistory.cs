@@ -42,6 +42,7 @@ namespace Manim
         {
             undoHistory.Clear();
             redoHistory.Clear();
+            actionMan.Rebase();
             actionMan.ReverseAll();
         }
     }
