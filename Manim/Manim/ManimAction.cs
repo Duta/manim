@@ -1,4 +1,6 @@
 ﻿namespace Manim
 {
-    abstract class ManimAction { }
+    enum Manipulation {
+        Grayscale
+    }
 }
