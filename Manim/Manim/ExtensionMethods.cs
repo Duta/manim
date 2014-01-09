@@ -9,7 +9,7 @@ namespace Manim
     {
         public static byte[] ToByteArray(this Image image)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 image.Save(ms, image.RawFormat);
                 return ms.ToArray();
@@ -18,7 +18,7 @@ namespace Manim
 
         public static Image ToImage(this byte[] array)
         {
-            using (MemoryStream ms = new MemoryStream(array))
+            using (var ms = new MemoryStream(array))
             {
                 return Image.FromStream(ms);
             }
@@ -32,7 +32,7 @@ namespace Manim
                        ImageLockMode.ReadOnly,
                        PixelFormat.Format32bppArgb);
 
-            byte[] sourceBuffer = new byte[sourceData.Stride *
+            var sourceBuffer = new byte[sourceData.Stride *
                                           sourceData.Height];
 
             Marshal.Copy(sourceData.Scan0, sourceBuffer, 0,
@@ -45,7 +45,7 @@ namespace Manim
 
         public static Bitmap ToBitmap(this byte[] resultBuffer, int width, int height)
         {
-            Bitmap resultBitmap = new Bitmap(width, height);
+            var resultBitmap = new Bitmap(width, height);
 
             BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
                                     resultBitmap.Width, resultBitmap.Height),

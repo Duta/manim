@@ -1,42 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Manim
 {
     public partial class ManimForm : Form
     {
-        private ActionMan actionMan;
-        private ManipulationHistory manipulations;
-        private string filePath;
+        private readonly ManipulationHistory _manipulations;
+        private string _filePath;
 
         public ManimForm()
         {
             InitializeComponent();
-            actionMan = new ActionMan(pictureBox);
-            manipulations = new ManipulationHistory(actionMan);
+            var actionMan = new ActionMan(pictureBox);
+            _manipulations = new ManipulationHistory(actionMan);
         }
 
         private void openMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.ShowDialog();
-            filePath = openFileDialog.FileName;
-            pictureBox.Image = Image.FromFile(filePath);
-            manipulations.Clear();
+            _filePath = openFileDialog.FileName;
+            pictureBox.Image = Image.FromFile(_filePath);
+            _manipulations.Clear();
         }
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
-            save();
+            Save();
         }
 
         private void saveAsMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog.ShowDialog();
-            filePath = saveFileDialog.FileName;
-            save();
+            _filePath = saveFileDialog.FileName;
+            Save();
         }
 
         private void quitMenuItem_Click(object sender, EventArgs e)
@@ -47,12 +44,12 @@ namespace Manim
 
         private void undoMenuItem_Click(object sender, EventArgs e)
         {
-            manipulations.Undo();
+            _manipulations.Undo();
         }
 
         private void redoMenuItem_Click(object sender, EventArgs e)
         {
-            manipulations.Redo();
+            _manipulations.Redo();
         }
 
         private void copyMenuItem_Click(object sender, EventArgs e)
@@ -62,14 +59,14 @@ namespace Manim
 
         private void grayscaleMenuItem_Click(object sender, EventArgs e)
         {
-            manipulations.Add(Manipulation.Grayscale);
+            _manipulations.Add(Manipulation.Blur);
         }
 
-        private void save()
+        private void Save()
         {
-            if (filePath == null) return;
-            pictureBox.Image.Save(filePath);
-            manipulations.Clear();
+            if (_filePath == null) return;
+            pictureBox.Image.Save(_filePath);
+            _manipulations.Clear();
         }
     }
 }

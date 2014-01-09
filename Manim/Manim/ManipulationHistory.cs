@@ -4,46 +4,46 @@ namespace Manim
 {
     class ManipulationHistory
     {
-        private Stack<Manipulation> undoHistory;
-        private Stack<Manipulation> redoHistory;
-        private ActionMan actionMan;
+        private readonly Stack<Manipulation> _undoHistory;
+        private readonly Stack<Manipulation> _redoHistory;
+        private readonly ActionMan _actionMan;
 
-        public ManipulationHistory(ActionMan _actionMan)
+        public ManipulationHistory(ActionMan actionMan)
         {
-            undoHistory = new Stack<Manipulation>();
-            redoHistory = new Stack<Manipulation>();
-            actionMan = _actionMan;
+            _undoHistory = new Stack<Manipulation>();
+            _redoHistory = new Stack<Manipulation>();
+            _actionMan = actionMan;
         }
 
         public void Add(Manipulation manipulation)
         {
-            undoHistory.Push(manipulation);
-            redoHistory.Clear();
-            actionMan.Apply(manipulation);
+            _undoHistory.Push(manipulation);
+            _redoHistory.Clear();
+            _actionMan.Apply(manipulation);
         }
 
         public void Undo()
         {
-            if (undoHistory.Count == 0) return;
-            var manipulation = undoHistory.Pop();
-            redoHistory.Push(manipulation);
-            actionMan.ReverseLast();
+            if (_undoHistory.Count == 0) return;
+            var manipulation = _undoHistory.Pop();
+            _redoHistory.Push(manipulation);
+            _actionMan.ReverseLast();
         }
 
         public void Redo()
         {
-            if (redoHistory.Count == 0) return;
-            var manipulation = redoHistory.Pop();
-            undoHistory.Push(manipulation);
-            actionMan.Apply(manipulation);
+            if (_redoHistory.Count == 0) return;
+            var manipulation = _redoHistory.Pop();
+            _undoHistory.Push(manipulation);
+            _actionMan.Apply(manipulation);
         }
 
         public void Clear()
         {
-            undoHistory.Clear();
-            redoHistory.Clear();
-            actionMan.Rebase();
-            actionMan.ReverseAll();
+            _undoHistory.Clear();
+            _redoHistory.Clear();
+            _actionMan.Rebase();
+            _actionMan.ReverseAll();
         }
     }
 }

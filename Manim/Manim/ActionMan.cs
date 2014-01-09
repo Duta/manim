@@ -1,73 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Manim
 {
     class ActionMan
     {
-        private Image baseImage;
-        private PictureBox pictureBox;
-        private List<Manipulation> manipulations;
+        private Image _baseImage;
+        private readonly PictureBox _pictureBox;
+        private readonly List<Manipulation> _manipulations;
 
-        public ActionMan(PictureBox _pictureBox)
+        public ActionMan(PictureBox pictureBox)
         {
-            manipulations = new List<Manipulation>();
-            pictureBox = _pictureBox;
+            _manipulations = new List<Manipulation>();
+            _pictureBox = pictureBox;
             Rebase();
         }
 
         public void Apply(Manipulation manipulation)
         {
-            manipulations.Add(manipulation);
-            update();
+            _manipulations.Add(manipulation);
+            Update();
         }
 
         public void ReverseLast()
         {
-            if (manipulations.Count == 0) return;
-            int lastIndex = manipulations.Count - 1;
-            var manipulation = manipulations[lastIndex];
-            manipulations.RemoveAt(lastIndex);
-            update();
+            if (_manipulations.Count == 0) return;
+            int lastIndex = _manipulations.Count - 1;
+            //var manipulation = _manipulations[lastIndex];
+            _manipulations.RemoveAt(lastIndex);
+            Update();
         }
 
         public void ReverseAll()
         {
-            manipulations.Clear();
-            update();
+            _manipulations.Clear();
+            Update();
         }
 
         public void Rebase()
         {
-            baseImage = pictureBox.Image;
+            _baseImage = _pictureBox.Image;
         }
 
-        private void update()
+        private void Update()
         {
-            if (baseImage == null) return;
-            Bitmap image = new Bitmap((Image)baseImage.Clone());
-            foreach (var manipulation in manipulations)
+            if (_baseImage == null) return;
+            var image = new Bitmap((Image)_baseImage.Clone());
+            foreach (var manipulation in _manipulations)
             {
                 switch (manipulation)
                 {
-                    case Manipulation.Grayscale:
-                        image = applyGrayscale(image);
+                    case Manipulation.Blur:
+                        image = ApplyBlur(image);
                         break;
                     default:
                         Console.Error.WriteLine("Unknown manipulation: " + manipulation);
                         break;
                 }
             }
-            pictureBox.Image = image;
+            _pictureBox.Image = image;
         }
 
-        private Bitmap applyGrayscale(Bitmap image)
+        private Bitmap ApplyBlur(Bitmap image)
         {
             /*byte[] inPixels = image.ToByteArray();
             int numPixels = inPixels.Length;
@@ -78,25 +74,24 @@ namespace Manim
             }
             return outPixels.ToImage();*/
             byte[] pixelBuffer = image.ToByteArray();
-            byte[] resultBuffer = new byte[pixelBuffer.Length];
-            byte[] middlePixel;
+            var resultBuffer = new byte[pixelBuffer.Length];
 
 
             int imageStride = image.Width * 4;
-            int filterOffset = (10 - 1) / 2;
-            int calcOffset = 0, filterY = 0, filterX = 0;
-            List<int> neighbourPixels = new List<int>();
+            const int filterOffset = (10 - 1) / 2;
+            var neighbourPixels = new List<int>();
 
 
             for (int k = 0; k + 4 < pixelBuffer.Length; k += 4)
             {
-                filterY = -filterOffset; filterX = -filterOffset;
+                int filterY = -filterOffset;
+                int filterX = -filterOffset;
                 neighbourPixels.Clear();
 
 
                 while (filterY <= filterOffset)
                 {
-                    calcOffset = k + (filterX * 4) +
+                    int calcOffset = k + (filterX * 4) +
                     (filterY * imageStride);
 
 
@@ -117,8 +112,8 @@ namespace Manim
 
 
                 neighbourPixels.Sort();
-                middlePixel = BitConverter.GetBytes(
-                              neighbourPixels[filterOffset]);
+                byte[] middlePixel = BitConverter.GetBytes(
+                    neighbourPixels[filterOffset]);
 
 
                 resultBuffer[k] = middlePixel[0];
